@@ -58,3 +58,41 @@ kubectl --namespace=operator port-forward service/node-app 8080:80
 Now use curl/postman to test the app
 Your app is running!
 ```
+
+7. Now the operator part
+
+```
+brew install operator-sdk
+
+mkdir http-operator && cd http-operator
+operator-sdk init --domain=mydomain.com --repo=github.com/you/http-operator
+operator-sdk create api --group=monitor --version=v1alpha1 --kind=HTTPMonitor --resource --controller
+
+make code changes. Right now this just reads logs from nginx
+
+after that push
+make docker-build docker-push IMG=httpmonitor:latest
+minikube image load httpmonitor:latest
+make deploy IMG=httpmonitor:latest #this deploys the new CRD to minikube cluster
+
+take2
+make docker-build IMG=httpmonitor:latest
+minikube image load httpmonitor:latest
+make deploy IMG=httpmonitor:latest
+
+take3
+had to update the apis module update in controller due to pod error
+go build ./...
+
+
+now create httpmonitor.yaml in node-app dir
+apply this crd
+kubectl apply -f httpmonitor.yaml
+
+now to test the logs
+kubectl logs -n operator -l control-plane=controller-manager -f
+
+other helpful commands:
+minikube ssh
+check if mnt is being correctlt written to
+```
