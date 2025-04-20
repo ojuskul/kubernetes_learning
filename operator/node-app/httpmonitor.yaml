@@ -1,0 +1,6 @@
+apiVersion: monitor.mydomain.com/v1alpha1
+kind: HTTPMonitor
+metadata:
+  name: monitor-sample
+  namespace: operator
+spec: {}

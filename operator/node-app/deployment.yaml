@@ -27,11 +27,13 @@ spec:
         app: node-app
     spec:
       volumes:
-      - name: logs
-        emptyDir: {}
+      - name: shared-logs
+        hostPath:
+          path: /mnt/nginx-logs
+          type: DirectoryOrCreate
       - name: nginx-config
         configMap:
-          name: nginx-config
+          name: nginx-config  
 
       containers:
       - name: node
@@ -41,22 +43,23 @@ spec:
         - containerPort: 3000
         volumeMounts:
         - mountPath: /logs
-          name: logs
+          name: shared-logs
 
       - name: nginx
-        image: nginx
+        image: nginx:alpine
         ports:
         - containerPort: 80
         volumeMounts:
-        - mountPath: /var/log/nginx
-          name: logs
         - mountPath: /etc/nginx/nginx.conf
           subPath: nginx.conf
           name: nginx-config
+        - mountPath: /var/log/nginx
+          name: shared-logs
 
       - name: log-tailer
         image: busybox
         command: ["sh", "-c", "tail -n0 -F /var/log/nginx/access.log"]
         volumeMounts:
         - mountPath: /var/log/nginx
-          name: logs
+          name: shared-logs
+          
