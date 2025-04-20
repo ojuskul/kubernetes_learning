@@ -1,0 +1,32 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: manager-role
+rules:
+- apiGroups:
+  - monitor.mydomain.com
+  resources:
+  - httpmonitors
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - monitor.mydomain.com
+  resources:
+  - httpmonitors/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - monitor.mydomain.com
+  resources:
+  - httpmonitors/status
+  verbs:
+  - get
+  - patch
+  - update
