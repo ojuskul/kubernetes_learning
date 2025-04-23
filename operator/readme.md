@@ -95,4 +95,10 @@ kubectl logs -n operator -l control-plane=controller-manager -f
 other helpful commands:
 minikube ssh
 check if mnt is being correctlt written to
+
+force http-monitor to pickup new config
+kubectl delete httpmonitor monitor-sample -n operator 
+kubectl delete pod <http-monitor-pod>
+kubectl apply -f httpmonitor.yaml
+
 ```
