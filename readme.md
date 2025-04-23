@@ -2,3 +2,4 @@
 # each directory has specific examples of how to operate things
 # at this point I aim to have atleast two tutorials, one for creating custom k8s operator, other for custom helm app
 
+# note this repo doesn't adhere to industry best practices, its meant as a pure playground
