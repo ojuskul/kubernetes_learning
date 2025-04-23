@@ -1,7 +1,7 @@
 apiVersion: monitor.mydomain.com/v1alpha1
 kind: HTTPMonitor
 metadata:
-  name: monitor-sample
+  name: http-error-monitor
   namespace: operator
 spec: 
   failureThreshold: 5
