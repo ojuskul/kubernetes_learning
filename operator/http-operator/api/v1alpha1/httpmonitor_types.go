@@ -28,8 +28,15 @@ type HTTPMonitorSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of HTTPMonitor. Edit httpmonitor_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	// +optional
+	FailureThreshold int `json:"failureThreshold,omitempty"`
+
+	// +optional
+	WindowMinutes int `json:"windowMinutes,omitempty"`
+
+	LogFilePath string `json:"logFilePath,omitempty"`
+
+	DeploymentTarget string `json:"deploymentTarget"`
 }
 
 // HTTPMonitorStatus defines the observed state of HTTPMonitor
