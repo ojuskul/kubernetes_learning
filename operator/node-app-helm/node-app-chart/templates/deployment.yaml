@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "node-app-chart.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "node-app-chart.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "node-app-chart.name" . }}
+    spec:
+      volumes:
+      - name: shared-logs
+        hostPath:
+          path: {{ .Values.logPath }}
+          type: DirectoryOrCreate
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+
+      containers:
+      - name: node
+        image: {{ .Values.nodeImage }}
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - mountPath: /logs
+          name: shared-logs
+
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+          name: nginx-config
+        - mountPath: /var/log/nginx
+          name: shared-logs
+
+      - name: log-tailer
+        image: busybox
+        command: ["sh", "-c", "tail -n0 -F /var/log/nginx/access.log"]
+        volumeMounts:
+        - mountPath: /var/log/nginx
+          name: shared-logs
